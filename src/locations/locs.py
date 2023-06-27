@@ -1,4 +1,6 @@
+import logging
 import os
+import traceback
 from flask import current_app, jsonify, request
 from flask.views import MethodView
 import redis
@@ -56,5 +58,6 @@ class MyLocations(MethodView):
             locations_list = self.data_access.read_locations()
             return jsonify({'locations': locations_list}), 200
 
-        except Exception as ex:
-            return jsonify({'response': ex}), 500
+        except Exception:
+            logging.error(traceback.format_exc())
+            return jsonify({'response': 'An internal error occurred!'}), 500

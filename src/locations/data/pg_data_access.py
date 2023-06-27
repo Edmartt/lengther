@@ -1,5 +1,5 @@
 import logging
-from psycopg2 import ProgrammingError
+import traceback
 import psycopg2
 from src.database.db_interface import IDataStorage
 from src.locations.models.model import Location
@@ -27,9 +27,9 @@ class PGDataAccess(IDataAccess):
             connection.commit()
             return self.location_id
 
-        except ProgrammingError as ex:
-            logging.exception(ex)
-            return 'Exception: {}'.format(ex)
+        except psycopg2.ProgrammingError:
+            logging.error(traceback.format_exc())
+            return 'An internal error ocurred!'
 
         finally:
             self.connection_object.close_db()
@@ -54,9 +54,9 @@ class PGDataAccess(IDataAccess):
             connection.commit()
             return location
 
-        except Exception as ex:
-            logging.exception(ex)
-            return [ex]
+        except psycopg2.ProgrammingError:
+            logging.error(traceback.format_exc())
+            return ['An internal error ocurred!']
 
         finally:
             cursor.close()
@@ -80,8 +80,8 @@ class PGDataAccess(IDataAccess):
                 connection.commit()
                 return self.location
 
-        except psycopg2.ProgrammingError as ex:
-            logging.exception(ex.pgerror)
+        except psycopg2.ProgrammingError:
+            logging.error(traceback.format_exc())
             return None
 
         finally:

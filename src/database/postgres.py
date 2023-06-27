@@ -1,4 +1,5 @@
 import logging
+import traceback
 from typing import Optional
 import click
 from flask import current_app, g
@@ -31,9 +32,8 @@ class PostgresConnection(IDataStorage):
 
                 g.c = g.db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
                 return g.db, g.c
-        except psycopg2.OperationalError as ex:
-            logging.warning('connection failed when 1: ', g.db.closed)
-            logging.exception(ex)
+        except psycopg2.OperationalError:
+            logging.error(traceback.format_exc())
 
     def close_db(self, e=None) -> None:
         db_connect = g.pop('db', None)
