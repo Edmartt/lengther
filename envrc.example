@@ -1,0 +1,17 @@
+export PG_DATABASE=database name
+export PG_USER=database user
+export PG_HOST=database host
+export PG_PASSWORD=database password
+export PG_PORT=postgres password
+export FLASK_APP=./run.py
+export FLASK_CONFIG=development
+export FLASK_DEBUG=True
+
+export CACHE_TYPE=redis
+export CACHE_REDIS_HOST=redis host
+export CACHE_REDIS_PORT=redis port
+export CACHE_REDIS_DB=database number
+export CACHE_REDIS_URL=redis url for caching
+export REDIS_URL=redis url for jobs
+export CACHE_DEFAULT_TIMEOUT=ttl for cache
+export CACHE_REDIS_PASSWORD=redis password
