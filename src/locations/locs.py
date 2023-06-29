@@ -1,17 +1,13 @@
 import logging
-import os
 import traceback
-from flask import current_app, jsonify, request
+from flask import jsonify, request
 from flask.views import MethodView
-import redis
-from rq import Queue
 from src.locations.data.pg_access_interface import IDataAccess
 from src.locations.models.model import Location
 from src.locations.cache.cache_redis import cache
 
 class MyLocations(MethodView):
 
-    decorators = [cache.cached(timeout=30, query_string=True)]
     def __init__(self, location: Location, data_access: IDataAccess) -> None:
         self.location = location
         self.data_access = data_access
@@ -35,22 +31,14 @@ class MyLocations(MethodView):
 
         return jsonify({'location_id': location_id}), 201
 
+    @cache.cached(timeout=30)
     def get(self, location_id: str | None = None) -> tuple:
-        
-        with current_app.app_context():
-            url_redis = os.environ.get('REDIS_URL') or ''
-            r = redis.from_url(url=url_redis)
-            q = Queue(connection=r)
 
         if location_id is not None:
-            location = q.enqueue(self.data_access.read_location, location_id)
-            task = location.get_id()
-            result = location.result
-            print('job result: ', result)
-            print("task id: ", task)
+            location = self.data_access.read_location(location_id)
 
             if location is not None:
-                return jsonify({'location': task}), 200
+                return jsonify({'location': location.__dict__}), 200
             else:
                 return jsonify({'response': 'location not found'}), 404
 

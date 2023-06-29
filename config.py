@@ -24,8 +24,11 @@ class Config:
 class DevelopmentConfig(Config):
     Debug = True
 
+class TestingConfig(Config):
+    TESTING = True
 
 config = {
         'development': DevelopmentConfig,
+        'testing': TestingConfig,
         'default': DevelopmentConfig
         }
