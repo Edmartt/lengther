@@ -24,7 +24,7 @@ WORKDIR /app
 
 COPY --from=builder /app/venv /app/venv
 ENV PATH="/app/venv/bin:$PATH"
-ENV FLASK_RUN_PORT=5000
+ENV FLASK_RUN_PORT=6000
 
 COPY . .
 
