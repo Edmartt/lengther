@@ -48,7 +48,7 @@ class PGDataAccess(IDataAccess):
 
             if result:
                 for _, row in enumerate(result):
-                    my_dict = {'name': row['name'], 'longitude': row['longitude'], 'latitude': row['latitude']}
+                    my_dict = {'id': row['id'],'name': row['name'], 'longitude': row['longitude'], 'latitude': row['latitude']}
                     location.append(my_dict)
 
             connection.commit()
